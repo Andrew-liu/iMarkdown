@@ -35,14 +35,11 @@ html = iMarkdown.iMarkdown(your_text_string)
 
 
 
-#Done
-
-1. basic markdown parser
-
 #TO DO
 
-1. GFM
-2. something else
+- [x]basic markdown parser
+- [ ]GFM
+- [ ]something else
 
 
 

@@ -278,6 +278,8 @@ class iMarkdown(object):
                 section_body = self._process_ullist(line, cache_line, section_body)
             elif re.compile(r'[ ]{0,3}[\d]*\.\s+(.*)').match(line):
                 section_body = self._process_ollist(line, cache_line, section_body)
+            else:
+                section_body = self._process_text(line, cache_line, section_body)
             cache_line = line
         return section_body
 
@@ -344,12 +346,25 @@ class iMarkdown(object):
         else:
             #第一行代码
             section_body += ('<ol><li>' + m.group(1) + '</li>')
-        return section_body
+        return section_body 
+
+    def _process_text(self, line='', cache_line='', section_body=''):
+        line = re.sub('>', '&gt', line)
+        section_body += ('<p>' + line + '</p>')
 
     def _process_last_line(self, line='', cache_line='', section_body=''):
         # 对最后一行代码判定添加闭合code, ul ol
-        
-        
+        if (re.compile(r'((\t)|(    ))(.*)').match(cache_line) and not
+            re.compile(r'((\t)|(    ))(.*)').match(line)):
+            section_body += '</code></pre>'
+        elif (re.compile(r'[ ]{0,3}[*+-]\s+(.*)').match(cache_line) and not 
+            re.compile(r'[ ]{0,3}[*+-]\s+(.*)').match(line)):
+            section_body += '</ul>'
+        elif (re.compile('[ ]{0,3}[\d]*\.\s+(.*)').match(cache_line) and not
+            re.compile('[ ]{0,3}[\d]*\.\s+(.*)').match(line)):
+            section_body += '</ol>'
+        else:
+            return
 
     def _process_inlinetag(self, line, cache_line='', section_body=''):
         '''行内元素按行处理'''
