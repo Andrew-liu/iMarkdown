@@ -211,7 +211,8 @@ class iMarkdown(object):
         self.register_extensions(extensions = extensions, 
                                 configs = extension_configs)
         self.body = ''
-        self._transform()  # 核心转换函数
+        section = self._transform()  # 核心转换函数
+        self.body = ''.join(section)
         self.html_page = self.header + self.body + self.footer
 
     def register_extensions(self, extensions, configs) :
@@ -250,15 +251,15 @@ class iMarkdown(object):
             line = self._process_inlinetag(line)
             # 5. 对整个section中block进行处理
             if line.startswith("#"):
-                self._process_section(section)
+                section.append(self._process_section(section))
                 section = [line]
             elif (line.startswith('=') or line.startswith('--')) and cache_line != "":
-                elf._process_section(line)
+                section.append(self._process_section(line))
                 section = [cache_line, line]
             else:
                 section.append(line)
                 cache_line = line
-        self._processSection(section)
+        section.append(self._processSection(section))
 
     def _process_section(self, section=''):
         '''块级元素按整个section进行处理'''
@@ -364,7 +365,8 @@ class iMarkdown(object):
             re.compile('[ ]{0,3}[\d]*\.\s+(.*)').match(line)):
             section_body += '</ol>'
         else:
-            return
+            return section_body
+        return section_body
 
     def _process_inlinetag(self, line, cache_line='', section_body=''):
         '''行内元素按行处理'''
