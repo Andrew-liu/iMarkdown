@@ -33,9 +33,7 @@ html = iMarkdown.iMarkdown(your_text_string)
 
 #More Detail
 
-整个博客开发过程, 已经整理成书, 欢迎阅读
 
-链接为[Django搭建简易博客教程](http://andrew-liu.gitbooks.io/django-blog/content/)
 
 #Done
 
